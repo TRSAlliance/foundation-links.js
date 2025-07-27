@@ -1,0 +1,17 @@
+{
+  "name": "foundation-links",
+  "version": "1.0.0",
+  "description": "TRS Foundation self-healing link system",
+  "main": "foundation-links.js",
+  "scripts": {
+    "build": "echo 'Building foundation-links...'",
+    "test": "echo 'Running tests...'",
+    "deploy": "./deploy.sh"
+  },
+  "dependencies": {
+    "@netlify/functions": "^1.0.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^16.0.0"
+  }
+}
