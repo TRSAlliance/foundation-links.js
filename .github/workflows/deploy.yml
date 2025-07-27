@@ -1,16 +1,55 @@
 name: Deploy to Netlify
+
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
-      - run: npm ci
-      - run: ./scripts/deploy.sh
+          node-version: '20' # Adjust based on package.json or project requirements
+
+      # Cache dependencies
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Run SEO validation (using CLI)
+      - name: Run SEO validation
+        run: node cli/index.js seo
+        env:
+          NODE_ENV: production
+
+      # Run build
+      - name: Build project
+        run: npm run build
+
+      # Deploy to Netlify (only on push to main)
+      - name: Deploy to Netlify
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: npm run deploy
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
