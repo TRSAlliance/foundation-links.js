@@ -1,3 +1,16 @@
+# Foundation Links
+A JavaScript project for [describe purpose].
+
+## Setup
+1. Clone the repo: `git clone https://github.com/TRSAlliance/foundation-links.js`
+2. Install dependencies: `npm install`
+3. Set NETLIFY_AUTH_TOKEN in your environment.
+4. Run build: `npm run build`
+5. Deploy: `npm run deploy`
+
+## CLI
+Run `node cli/index.js` for CLI usage.
+  
 const { logCreedy, isTraining, trainingLevel, TrainingError } = require('./utils');
 
 const commands = {};
