@@ -1,4 +1,4 @@
-name: AI Dev Assistant main.yml
+name: AI Dev Assistant deploy.yml
 on:
   push:
     branches: [main, develop]
