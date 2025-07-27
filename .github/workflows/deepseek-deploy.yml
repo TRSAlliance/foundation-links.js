@@ -1,36 +1,27 @@
-# .github/workflows/deepseek-deploy.yml
-name: Netlify Deployment
+name: Deepseek SEO Validation
 
 on:
-  push:
-    branches: [main]
+  schedule:
+    - cron: '0 0 * * *' # Run daily at midnight
+  workflow_dispatch: # Allow manual triggering
 
 jobs:
-  deploy:
+  seo-validation:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Node
-        uses: actions/setup-node@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
-          cache: 'npm'  # Cache node_modules
+          node-version: '20'
 
-      - name: Cache Next.js build
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.npm
-            .next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-nextjs-
+      - name: Install dependencies
+        run: npm install
 
-      - name: Install Netlify CLI
-        run: npm install -g netlify-cli
-
-      - name: Execute Deployment
-        run: ./deploy.sh
+      - name: Run SEO validation
+        run: node cli/index.js seo
         env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NODE_ENV: production
